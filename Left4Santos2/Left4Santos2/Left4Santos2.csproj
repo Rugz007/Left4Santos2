@@ -33,7 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ScriptHookVDotNet3">
-      <HintPath>E:\Script Hook V files\ScriptHookVDotNet3.dll</HintPath>
+      <HintPath>..\..\..\..\Hello\Scripthook\ScriptHookVDotNet3.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -4,10 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GTA;
-namespace Left4Santos2
+namespace Left4Santos2 
 {
-    public class Main
+    public class Main : Script
     {
-        //lauda
+        public Main()
+        {
+
+        }
+        public void CreateZombie()
+        {
+
+        }
+        public void MakeEveryoneZombie()
+        {
+
+        }
     }
 }

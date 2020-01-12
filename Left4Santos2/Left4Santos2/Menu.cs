@@ -8,5 +8,6 @@ namespace Left4Santos2
 {
     class Menu
     {
+        
     }
 }
