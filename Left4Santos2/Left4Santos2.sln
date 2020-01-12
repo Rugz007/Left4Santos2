@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Left4Santos2", "Left4Santos2\Left4Santos2.csproj", "{DC52FDB1-2043-4E9B-BC4A-7A5DAAAA53E2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DC52FDB1-2043-4E9B-BC4A-7A5DAAAA53E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC52FDB1-2043-4E9B-BC4A-7A5DAAAA53E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC52FDB1-2043-4E9B-BC4A-7A5DAAAA53E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC52FDB1-2043-4E9B-BC4A-7A5DAAAA53E2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4F27A953-4A78-4EA9-9BCD-A099F97953B2}
+	EndGlobalSection
+EndGlobal
