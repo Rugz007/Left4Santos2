@@ -56,7 +56,7 @@ namespace Left4Santos2
                             }
                             if(ped.RelationshipGroup != SurvivorGroup)
                             {
-                                extender.MakeZombieGoToPed(ped, Game.Player.Character..);
+                                extender.MakeZombieGoToPed(ped, Game.Player.Character.Position);
                             }
                         }
                     }
