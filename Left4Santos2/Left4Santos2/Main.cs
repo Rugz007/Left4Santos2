@@ -34,7 +34,7 @@ namespace Left4Santos2
                 {
                     foreach (Ped ped in p)
                     {
-                        if (ped != Game.Player.Character && ped.RelationshipGroup != PlayerGroup && !ped.IsDead && ped.RelationshipGroup != SurvivorGroup)
+                        if (ped != Game.Player.Character && ped.RelationshipGroup != PlayerGroup && !ped.IsDead && ped.RelationshipGroup != SurvivorGroup && ped.Weapons.Current != null)
                         {
                            /* #region Make Survivor
                             if (p.Length >= 10)
@@ -51,13 +51,12 @@ namespace Left4Santos2
                             }
                             #endregion*/
                             if (ped.RelationshipGroup != SurvivorGroup && ped.RelationshipGroup != ZombieGroup)
-                            {
+                            { 
                                 extender.MakeZombie(ped, ZombieGroup);
                             }
                             if(ped.RelationshipGroup != SurvivorGroup)
                             {
-                                extender.MakeZombieGoToPed(ped, Game.Player.Character.Position);
-                                Notification.Show("Wuhu");
+                                extender.MakeZombieGoToPed(ped, Game.Player.Character..);
                             }
                         }
                     }
@@ -67,6 +66,12 @@ namespace Left4Santos2
             {
                 Menu.zombie_spawn = 0;
                 enable = true;
+            }
+            if(Menu.survivor_spawn == 1)
+            {
+                Menu.survivor_spawn = 0;
+                Ped survivor = World.CreateRandomPed(Game.Player.Character.Position);
+                extender.MakeSurvivor(survivor, SurvivorGroup);
             }
         }
         void OnKeyUp(object sender,KeyEventArgs e)

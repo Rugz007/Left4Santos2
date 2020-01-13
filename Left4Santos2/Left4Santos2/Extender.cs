@@ -44,23 +44,6 @@ namespace Left4Santos2
         {
             GiveZombieLook(ped);
             ped.RelationshipGroup = relationshipGroup;
-            Function.Call(Hash.SET_BLOCKING_OF_NON_TEMPORARY_EVENTS, ped, 1);
-            Function.Call(Hash.SET_PED_FLEE_ATTRIBUTES, ped, 0, 0);
-            Function.Call(Hash.SET_PED_COMBAT_ATTRIBUTES, ped, 46, 1);
-        }
-        public void MakeSurvivor(Ped ped, RelationshipGroup relationshipGroup)
-        {
-            ped.RelationshipGroup = null;
-            ped.RelationshipGroup = relationshipGroup;
-            ped.Weapons.Give(WeaponHash.CarbineRifle, 100, true, true);
-            ped.Task.FightAgainstHatedTargets(30f);
-            Function.Call(Hash.SET_PED_COMBAT_ATTRIBUTES, ped, 46, true);
-            Blip blip = ped.AddBlip();
-            blip.Sprite = BlipSprite.Friend;
-            blip.Color = BlipColor.Blue;
-        }
-        public void MakeZombieGoToPed(Ped ped, Vector3 target)
-        {
             if (!Function.Call<bool>(Hash.HAS_CLIP_SET_LOADED, new InputArgument[]
                     {"move_m@drunk@verydrunk"}))
             {
@@ -83,12 +66,27 @@ namespace Left4Santos2
             {
                     ped.Handle,true
             });
-            Function.Call(Hash.TASK_GO_STRAIGHT_TO_COORD, ped,target.X,target.Y,target.Z,1.0f,-1,0.0f,0f);
+
             ped.AlwaysKeepTask = true;
             ped.IsEnemy = true;
             Function.Call(Hash.SET_BLOCKING_OF_NON_TEMPORARY_EVENTS, ped, 1);
             Function.Call(Hash.SET_PED_FLEE_ATTRIBUTES, ped, 0, 0);
             Function.Call(Hash.SET_PED_COMBAT_ATTRIBUTES, ped, 46, 1);
         }
+        public void MakeSurvivor(Ped ped, RelationshipGroup relationshipGroup)
+        {
+            ped.RelationshipGroup = relationshipGroup;
+            ped.Weapons.Give(WeaponHash.CarbineRifle, 100, true, true);
+            ped.Task.FightAgainstHatedTargets(30f);
+            Function.Call(Hash.SET_PED_COMBAT_ATTRIBUTES, ped, 46, true);
+            Blip blip = ped.AddBlip();
+            blip.Sprite = BlipSprite.Friend;
+            blip.Color = BlipColor.Blue;
+        }
+        public void MakeZombieGoToPed(Ped ped, Vector3 target)
+        {
+            Function.Call(Hash.TASK_GO_STRAIGHT_TO_COORD, ped, target.X, target.Y, target.Z, 1.0f, -1, 0.0f, 0f);
+        }
     }
+    
 }
