@@ -19,8 +19,9 @@ namespace Left4Santos2
         string Path = "C://Users/Akshat/source/repos/Rugz007/Left4Santos2/location.txt";
         MenuPool zombiemod_menupool;
         UIMenu mainMenu;
-        public static int spawn = 0;
-        UIMenuItem spawnZombie, input_location;
+        public static int zombie_spawn = 0;
+        public static int survivor_spawn = 0;
+        UIMenuItem spawnZombie, input_location, spawnSurvivor;
         public Menu()
         {
             Setup();
@@ -55,12 +56,16 @@ namespace Left4Santos2
             input_location = new UIMenuItem("Input Location");
             mainMenu.AddItem(input_location);
             mainMenu.OnItemSelect += onMainMenuItemSelect;
+
+            spawnSurvivor = new UIMenuItem("Spawn Survivor");
+            mainMenu.AddItem(spawnSurvivor);
+            mainMenu.OnItemSelect += onMainMenuItemSelect;
         }
         void onMainMenuItemSelect(UIMenu sender, UIMenuItem item, int index)
         {
             if(item == spawnZombie)
             {
-                spawn = 1;
+                zombie_spawn = 1;
             }
             if(item == input_location)
             {
@@ -75,6 +80,10 @@ namespace Left4Santos2
                     sw.Flush();
                 }
                 sw.Close();
+            }
+            if (item == spawnSurvivor)
+            {
+                survivor_spawn = 1;
             }
         }
     }
