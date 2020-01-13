@@ -30,36 +30,35 @@ namespace Left4Santos2
             if(enable)
             {
                 Ped[] p = World.GetNearbyPeds(Game.Player.Character.Position,50f);
-                Notification.Show("Checking");
                 if(p != null)
                 {
                     foreach (Ped ped in p)
                     {
-                        ped.AddBlip();
                         if (ped != Game.Player.Character && ped.RelationshipGroup != PlayerGroup && !ped.IsDead && ped.RelationshipGroup != SurvivorGroup)
                         {
-                            #region Make Survivor
+                           /* #region Make Survivor
                             if (p.Length >= 10)
                             {
                                 rnd = random.Next(1, 5);
                                 for (int i = 0; i > rnd; i++)
                                 {
-                                    extender.MakeSurvivor(p[i], SurvivorGroup);
-                                    Notification.Show("Made Survivor");
+                                    if(p[i].RelationshipGroup != ZombieGroup)
+                                    {
+                                        extender.MakeSurvivor(p[i], SurvivorGroup);
+                                    }
                                     //p = p.Where(val => val != p[i]).ToArray();
                                 }
                             }
-                            #endregion
+                            #endregion*/
                             if (ped.RelationshipGroup != SurvivorGroup && ped.RelationshipGroup != ZombieGroup)
                             {
                                 extender.MakeZombie(ped, ZombieGroup);
-                                Notification.Show("Made Zombie");
                             }
-                            else if (ped.RelationshipGroup != SurvivorGroup && ped.RelationshipGroup == ZombieGroup)
-                            {
-                                ped.Task.GoTo(Game.Player.Character.Position);
-                                Notification.Show("Making him");
-                            }
+                        }
+                        if(ped.RelationshipGroup == ZombieGroup)
+                        {
+                            extender.MakeZombieGoToPed(ped, Game.Player.Character.Position);
+                            Notification.Show("Making him go ig?");
                         }
                     }
                 }
