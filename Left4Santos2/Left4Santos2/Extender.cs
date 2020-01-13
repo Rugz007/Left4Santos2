@@ -39,9 +39,23 @@ namespace Left4Santos2
         {
             Function.Call(Hash.SET_PED_DENSITY_MULTIPLIER_THIS_FRAME, multiplier);
         }
-        public void MakeZombie(Ped ped)
+        public void MakeZombie(Ped ped , RelationshipGroup relationshipGroup)
         {
-
+            GiveZombieLook(ped);
+            ped.RelationshipGroup = relationshipGroup;
+            ped.Health = 3000;
+            ped.AlwaysKeepTask = true;
+            ped.IsEnemy = true;
+            Function.Call(Hash.SET_BLOCKING_OF_NON_TEMPORARY_EVENTS, ped, 1);
+            Function.Call(Hash.SET_PED_FLEE_ATTRIBUTES, ped, 0, 0);
+            Function.Call(Hash.SET_PED_COMBAT_ATTRIBUTES, ped, 46, 1);
+        }
+        public void MakeSurvivor(Ped ped,RelationshipGroup relationshipGroup)
+        {
+            ped.RelationshipGroup = relationshipGroup;
+            ped.Weapons.Give(WeaponHash.CarbineRifle, 100, true, true);
+            ped.Task.FightAgainstHatedTargets(30f);
+            GTA.Native.Function.Call(Hash.SET_PED_COMBAT_ATTRIBUTES, ped, 42, true);
         }
     }
 }
