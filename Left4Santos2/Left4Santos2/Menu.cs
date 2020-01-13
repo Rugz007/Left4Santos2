@@ -9,16 +9,18 @@ using GTA.Native;
 using NativeUI;
 using System.Drawing;
 using System.Windows.Forms;
+using System.IO;
 
 namespace Left4Santos2
 {
+    
     public class Menu : Script
     {
+        string Path = "C://Users/Akshat/source/repos/Rugz007/Left4Santos2/location.txt";
         MenuPool zombiemod_menupool;
         UIMenu mainMenu;
         public static int spawn = 0;
-        UIMenuItem spawnZombie;
-
+        UIMenuItem spawnZombie, input_location;
         public Menu()
         {
             Setup();
@@ -49,12 +51,30 @@ namespace Left4Santos2
             spawnZombie = new UIMenuItem("Spawn Zombie");
             mainMenu.AddItem(spawnZombie);
             mainMenu.OnItemSelect += onMainMenuItemSelect;
+
+            input_location = new UIMenuItem("Input Location");
+            mainMenu.AddItem(input_location);
+            mainMenu.OnItemSelect += onMainMenuItemSelect;
         }
         void onMainMenuItemSelect(UIMenu sender, UIMenuItem item, int index)
         {
             if(item == spawnZombie)
             {
                 spawn = 1;
+            }
+            if(item == input_location)
+            {
+                string input;
+                input = Game.GetUserInput();
+                Vector3 loc = Game.Player.Character.Position;
+                StreamWriter sw = new StreamWriter(Path);
+                using(sw = File.AppendText(Path))
+                {
+                    sw.Write(input);
+                    sw.Write(loc);
+                    sw.Flush();
+                }
+                sw.Close();
             }
         }
     }
