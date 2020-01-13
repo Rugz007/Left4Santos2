@@ -2,8 +2,8 @@
 using GTA.Native;
 namespace Left4Santos2
 {
-    class Extender
-    {
+    class Extender 
+    {   
         public bool CanHearPlayer(Ped ped)
         {
             return Function.Call<bool>(Hash.CAN_PED_HEAR_PLAYER,Game.Player.Character,ped);
