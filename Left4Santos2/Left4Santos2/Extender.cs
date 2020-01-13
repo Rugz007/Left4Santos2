@@ -83,7 +83,7 @@ namespace Left4Santos2
             {
                     ped.Handle,true
             });
-            ped.Task.Go(target,true);
+            Function.Call(Hash.TASK_GO_STRAIGHT_TO_COORD, ped,target.X,target.Y,target.Z,1.0f,-1,0.0f,0f);
             ped.AlwaysKeepTask = true;
             ped.IsEnemy = true;
             Function.Call(Hash.SET_BLOCKING_OF_NON_TEMPORARY_EVENTS, ped, 1);
