@@ -20,6 +20,10 @@ namespace Left4Santos2
             ZombieGroup = World.AddRelationshipGroup("Zombie");
             SurvivorGroup = World.AddRelationshipGroup("SurvivorGroup");
             SurvivorGroup.SetRelationshipBetweenGroups(ZombieGroup, Relationship.Hate, true);
+            PlayerGroup = World.AddRelationshipGroup("PlayerGroup");
+            PlayerGroup.SetRelationshipBetweenGroups(ZombieGroup, Relationship.Hate, true);
+            PlayerGroup.SetRelationshipBetweenGroups(SurvivorGroup, Relationship.Companion, true);
+            Function.Call(Hash.SET_MAX_WANTED_LEVEL, 0);
             extender = new Extender();
             this.KeyUp += OnKeyUp;
             this.Tick += Main_Tick;
