@@ -1,4 +1,5 @@
 ﻿using GTA;
+using GTA.Math;
 using GTA.Native;
 namespace Left4Santos2
 {
@@ -43,15 +44,13 @@ namespace Left4Santos2
         {
             GiveZombieLook(ped);
             ped.RelationshipGroup = relationshipGroup;
-            ped.Health = 3000;
-            ped.AlwaysKeepTask = true;
-            ped.IsEnemy = true;
             Function.Call(Hash.SET_BLOCKING_OF_NON_TEMPORARY_EVENTS, ped, 1);
             Function.Call(Hash.SET_PED_FLEE_ATTRIBUTES, ped, 0, 0);
             Function.Call(Hash.SET_PED_COMBAT_ATTRIBUTES, ped, 46, 1);
         }
         public void MakeSurvivor(Ped ped,RelationshipGroup relationshipGroup)
         {
+            ped.RelationshipGroup = null;
             ped.RelationshipGroup = relationshipGroup;
             ped.Weapons.Give(WeaponHash.CarbineRifle, 100, true, true);
             ped.Task.FightAgainstHatedTargets(30f);
@@ -59,6 +58,37 @@ namespace Left4Santos2
             Blip blip = ped.AddBlip();
             blip.Sprite = BlipSprite.Friend;
             blip.Color = BlipColor.Blue;
+        }
+        public void MakeZombieGoToPed(Ped ped,Vector3 target)
+        {
+            if (!Function.Call<bool>(Hash.HAS_CLIP_SET_LOADED, new InputArgument[]
+                    {"move_m@drunk@verydrunk"}))
+            {
+                Function.Call(Hash.REQUEST_CLIP_SET, new InputArgument[]
+                {
+                        "move_m@drunk@verydrunk"
+                });
+            }
+            if (Function.Call<bool>(Hash.HAS_CLIP_SET_LOADED, new InputArgument[]
+            {
+                    "move_m@drunk@verydrunk"
+            }))
+            {
+                Function.Call(Hash.SET_PED_MOVEMENT_CLIPSET, new InputArgument[]
+                {
+                        ped.Handle,"move_m@drunk@verydrunk",1048576000
+                });
+            }
+            Function.Call(Hash.STOP_PED_SPEAKING, new InputArgument[]
+            {
+                    ped.Handle,true
+            });
+            ped.Task.GoTo(target);
+            ped.AlwaysKeepTask = true;
+            ped.IsEnemy = true;
+            Function.Call(Hash.SET_BLOCKING_OF_NON_TEMPORARY_EVENTS, ped, 1);
+            Function.Call(Hash.SET_PED_FLEE_ATTRIBUTES, ped, 0, 0);
+            Function.Call(Hash.SET_PED_COMBAT_ATTRIBUTES, ped, 46, 1);
         }
     }
 }
