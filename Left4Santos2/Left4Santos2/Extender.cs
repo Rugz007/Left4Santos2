@@ -39,5 +39,9 @@ namespace Left4Santos2
         {
             Function.Call(Hash.SET_PED_DENSITY_MULTIPLIER_THIS_FRAME, multiplier);
         }
+        public void MakeZombie(Ped ped)
+        {
+
+        }
     }
 }

@@ -9,16 +9,14 @@ using GTA.Native;
 using NativeUI;
 using System.Drawing;
 using System.Windows.Forms;
-using Main;
 
 namespace Left4Santos2
 {
-    int spawn = 0;
     public class Menu : Script
     {
         MenuPool zombiemod_menupool;
         UIMenu mainMenu;
-
+        public static int spawn = 0;
         UIMenuItem spawnZombie;
 
         public Menu()
@@ -37,7 +35,10 @@ namespace Left4Santos2
 
         void onKeyDown(object sender, KeyEventArgs e)
         {
-            mainMenu.Visible = !mainMenu.Visible;
+            if(e.KeyCode == Keys.F10)
+            {
+                mainMenu.Visible = !mainMenu.Visible;
+            }
         }
         void Setup()
         {
