@@ -54,11 +54,11 @@ namespace Left4Santos2
                             {
                                 extender.MakeZombie(ped, ZombieGroup);
                             }
-                        }
-                        if(ped.RelationshipGroup == ZombieGroup)
-                        {
-                            extender.MakeZombieGoToPed(ped, Game.Player.Character.Position);
-                            Notification.Show("Making him go ig?");
+                            if(ped.RelationshipGroup != SurvivorGroup)
+                            {
+                                extender.MakeZombieGoToPed(ped, Game.Player.Character.Position);
+                                Notification.Show("Wuhu");
+                            }
                         }
                     }
                 }
