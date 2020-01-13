@@ -78,6 +78,7 @@ namespace Left4Santos2
             ped.RelationshipGroup = relationshipGroup;
             ped.Weapons.Give(WeaponHash.CarbineRifle, 100, true, true);
             ped.Task.FightAgainstHatedTargets(30f);
+            ped.AlwaysKeepTask = true;
             Function.Call(Hash.SET_PED_COMBAT_ATTRIBUTES, ped, 46, true);
             Blip blip = ped.AddBlip();
             blip.Sprite = BlipSprite.Friend;

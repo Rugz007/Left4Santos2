@@ -3,27 +3,28 @@ using GTA;
 using GTA.UI;
 using System.Windows.Forms;
 using System.Linq;
+using GTA.Native;
+
 namespace Left4Santos2 
 {
     public class Main : Script
     {
-        RelationshipGroup ZombieGroup, PlayerGroup, SurvivorGroup;
+        RelationshipGroup  PlayerGroup, SurvivorGroup;
+        RelationshipGroup ZombieGroup;
         Random random;
         int rnd;
         Extender extender;
         bool enable;
         public Main()
         {
-            ZombieGroup = new RelationshipGroup();
-            PlayerGroup = new RelationshipGroup();
-            SurvivorGroup = new RelationshipGroup();
+            ZombieGroup = World.AddRelationshipGroup("Zombie");
+            SurvivorGroup = World.AddRelationshipGroup("SurvivorGroup");
             SurvivorGroup.SetRelationshipBetweenGroups(ZombieGroup, Relationship.Hate, true);
-            PlayerGroup.SetRelationshipBetweenGroups(ZombieGroup, Relationship.Hate, true);
-            Game.Player.Character.RelationshipGroup = PlayerGroup;
             extender = new Extender();
             this.KeyUp += OnKeyUp;
             this.Tick += Main_Tick;
             random = new Random();
+            
         }
         private void Main_Tick(object sender, EventArgs e)
         {
@@ -32,9 +33,11 @@ namespace Left4Santos2
                 Ped[] p = World.GetNearbyPeds(Game.Player.Character.Position,50f);
                 if(p != null)
                 {
+                    
                     foreach (Ped ped in p)
                     {
-                        if (ped != Game.Player.Character && ped.RelationshipGroup != PlayerGroup && !ped.IsDead && ped.RelationshipGroup != SurvivorGroup && ped.Weapons.Current != null)
+
+                        if (ped != Game.Player.Character && ped.RelationshipGroup != PlayerGroup && !ped.IsDead && ped.RelationshipGroup != SurvivorGroup )
                         {
                            /* #region Make Survivor
                             if (p.Length >= 10)
@@ -50,11 +53,11 @@ namespace Left4Santos2
                                 }
                             }
                             #endregion*/
-                            if (ped.RelationshipGroup != SurvivorGroup && ped.RelationshipGroup != ZombieGroup)
+                            if (ped.RelationshipGroup != ZombieGroup )
                             { 
                                 extender.MakeZombie(ped, ZombieGroup);
                             }
-                            if(ped.RelationshipGroup != SurvivorGroup)
+                            if(ped.RelationshipGroup != SurvivorGroup && ped.Weapons.Current == WeaponHash.Unarmed)
                             {
                                 extender.MakeZombieGoToPed(ped, Game.Player.Character.Position);
                             }
@@ -71,7 +74,7 @@ namespace Left4Santos2
             {
                 Menu.survivor_spawn = 0;
                 Ped survivor = World.CreateRandomPed(Game.Player.Character.Position);
-                extender.MakeSurvivor(survivor, SurvivorGroup);
+                MakeSurvivor(survivor, SurvivorGroup);
             }
         }
         void OnKeyUp(object sender,KeyEventArgs e)
@@ -88,6 +91,18 @@ namespace Left4Santos2
             {
                 Notification.Show("1");
             }
+        }
+        public void MakeSurvivor(Ped ped, RelationshipGroup relationshipGroup)
+        {
+            ped.RelationshipGroup = relationshipGroup;
+            ped.RelationshipGroup = SurvivorGroup;
+            ped.Weapons.Give(WeaponHash.CarbineRifle, 100, true, true);
+            ped.Task.FightAgainstHatedTargets(30f);
+            ped.AlwaysKeepTask = true;
+            Function.Call(Hash.SET_PED_COMBAT_ATTRIBUTES, ped, 46, true);
+            Blip blip = ped.AddBlip();
+            blip.Sprite = BlipSprite.Friend;
+            blip.Color = BlipColor.Blue;
         }
     }
 }
