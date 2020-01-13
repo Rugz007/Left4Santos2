@@ -7,7 +7,7 @@ namespace Left4Santos2
     {
         public bool CanHearPlayer(Ped ped)
         {
-            return Function.Call<bool>(Hash.CAN_PED_HEAR_PLAYER,Game.Player.Character,ped);
+            return Function.Call<bool>(Hash.CAN_PED_HEAR_PLAYER, Game.Player.Character, ped);
         }
         public bool CanSeePlayer(Ped ped)
         {
@@ -40,7 +40,7 @@ namespace Left4Santos2
         {
             Function.Call(Hash.SET_PED_DENSITY_MULTIPLIER_THIS_FRAME, multiplier);
         }
-        public void MakeZombie(Ped ped , RelationshipGroup relationshipGroup)
+        public void MakeZombie(Ped ped, RelationshipGroup relationshipGroup)
         {
             GiveZombieLook(ped);
             ped.RelationshipGroup = relationshipGroup;
@@ -48,7 +48,7 @@ namespace Left4Santos2
             Function.Call(Hash.SET_PED_FLEE_ATTRIBUTES, ped, 0, 0);
             Function.Call(Hash.SET_PED_COMBAT_ATTRIBUTES, ped, 46, 1);
         }
-        public void MakeSurvivor(Ped ped,RelationshipGroup relationshipGroup)
+        public void MakeSurvivor(Ped ped, RelationshipGroup relationshipGroup)
         {
             ped.RelationshipGroup = null;
             ped.RelationshipGroup = relationshipGroup;
@@ -59,7 +59,7 @@ namespace Left4Santos2
             blip.Sprite = BlipSprite.Friend;
             blip.Color = BlipColor.Blue;
         }
-        public void MakeZombieGoToPed(Ped ped,Vector3 target)
+        public void MakeZombieGoToPed(Ped ped, Vector3 target)
         {
             if (!Function.Call<bool>(Hash.HAS_CLIP_SET_LOADED, new InputArgument[]
                     {"move_m@drunk@verydrunk"}))
