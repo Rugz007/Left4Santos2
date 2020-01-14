@@ -16,12 +16,13 @@ namespace Left4Santos2
     
     public class Menu : Script
     {
-        string Path = "C://Users/Akshat/source/repos/Rugz007/Left4Santos2/location.txt";
+        string Path = "location.txt";
         MenuPool zombiemod_menupool;
         UIMenu mainMenu;
         public static int zombie_spawn = 0;
         public static int survivor_spawn = 0;
-        UIMenuItem spawnZombie, input_location, spawnSurvivor;
+        UIMenuItem input_location, spawnSurvivor;
+        UIMenuCheckboxItem spawnZombie;
         public Menu()
         {
             Setup();
@@ -49,9 +50,9 @@ namespace Left4Santos2
             mainMenu = new UIMenu("Zombie Mod", "Hello there!");
             zombiemod_menupool.Add(mainMenu);
 
-            spawnZombie = new UIMenuItem("Spawn Zombie");
+            spawnZombie = new UIMenuCheckboxItem("Spawn Zombie", false);
             mainMenu.AddItem(spawnZombie);
-            mainMenu.OnItemSelect += onMainMenuItemSelect;
+            mainMenu.OnCheckboxChange += onMainMenuCheckboxChange;
 
             input_location = new UIMenuItem("Input Location");
             mainMenu.AddItem(input_location);
@@ -63,20 +64,18 @@ namespace Left4Santos2
         }
         void onMainMenuItemSelect(UIMenu sender, UIMenuItem item, int index)
         {
-            if(item == spawnZombie)
-            {
-                zombie_spawn = 1;
-            }
             if(item == input_location)
             {
                 string input;
                 input = Game.GetUserInput();
-                Vector3 loc = Game.Player.Character.Position;
+                Vector3 loc = new Vector3();
+                loc = Game.Player.Character.Position;
+                string loc1 = loc.ToString();
                 StreamWriter sw = new StreamWriter(Path);
                 using(sw = File.AppendText(Path))
                 {
                     sw.Write(input);
-                    sw.Write(loc);
+                    sw.Write(loc1);
                     sw.Flush();
                 }
                 sw.Close();
@@ -84,6 +83,22 @@ namespace Left4Santos2
             if (item == spawnSurvivor)
             {
                 survivor_spawn = 1;
+            }
+        }
+        void onMainMenuCheckboxChange(UIMenu sender, UIMenuCheckboxItem item, bool checked_)
+        {
+            if(item == spawnZombie)
+            {
+                if(checked_ == true)
+                {
+                    zombie_spawn = 0;
+                    checked_ = false;
+                }
+                else
+                {
+                    zombie_spawn = 1;
+                    checked_ = true;
+                }
             }
         }
     }
