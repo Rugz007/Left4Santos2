@@ -4,110 +4,122 @@ using GTA.UI;
 using System.Windows.Forms;
 using System.Linq;
 using GTA.Native;
+using GTA.Math;
+using System.Collections.Generic;
 
 namespace Left4Santos2 
 {
     public class Main : Script
     {
-        RelationshipGroup  PlayerGroup, SurvivorGroup;
-        RelationshipGroup ZombieGroup;
+        RelationshipGroup PlayerGroup, FriendlyGroup, ZombieGroup, MilitaryGroup, ThugGroup, RunnerGroup, BomberGroup;
+        List<Ped> Friendlies;
         Random random;
         int rnd;
         Extender extender;
         bool enable;
+        Predicate<Ped> nearZombie;
         public Main()
         {
-            ZombieGroup = World.AddRelationshipGroup("Zombie");
-            SurvivorGroup = World.AddRelationshipGroup("SurvivorGroup");
-            SurvivorGroup.SetRelationshipBetweenGroups(ZombieGroup, Relationship.Hate, true);
-            PlayerGroup = World.AddRelationshipGroup("PlayerGroup");
-            PlayerGroup.SetRelationshipBetweenGroups(ZombieGroup, Relationship.Hate, true);
-            PlayerGroup.SetRelationshipBetweenGroups(SurvivorGroup, Relationship.Companion, true);
             Function.Call(Hash.SET_MAX_WANTED_LEVEL, 0);
+            Friendlies = new List<Ped>();
             World.Blackout = true;
             extender = new Extender();
-            this.KeyUp += OnKeyUp;
-            this.Tick += Main_Tick;
+            Tick += Main_Tick;
             random = new Random();
-            
+            SetRelationShips();
         }
         private void Main_Tick(object sender, EventArgs e)
         {
-            if(enable)
+            if (enable)
             {
-                Ped[] p = World.GetNearbyPeds(Game.Player.Character.Position,50f);
-                if(p != null)
+                Ped[] p = World.GetNearbyPeds(Game.Player.Character.Position, 50f);
+                if (p != null)
                 {
-                    
                     foreach (Ped ped in p)
                     {
-
-                        if (ped != Game.Player.Character && ped.RelationshipGroup != PlayerGroup && !ped.IsDead && ped.RelationshipGroup != SurvivorGroup )
+                        if (ped != Game.Player.Character && ped.RelationshipGroup != PlayerGroup && !ped.IsDead && ped.RelationshipGroup != FriendlyGroup && !ped.IsDead)
                         {
-                           /* #region Make Survivor
-                            if (p.Length >= 10)
+                            if (ped.RelationshipGroup != ZombieGroup && ped.RelationshipGroup != FriendlyGroup)
                             {
-                                rnd = random.Next(1, 5);
-                                for (int i = 0; i > rnd; i++)
-                                {
-                                    if(p[i].RelationshipGroup != ZombieGroup)
-                                    {
-                                        extender.MakeSurvivor(p[i], SurvivorGroup);
-                                    }
-                                    //p = p.Where(val => val != p[i]).ToArray();
-                                }
-                            }
-                            #endregion*/
-                            if (ped.RelationshipGroup != ZombieGroup )
-                            { 
                                 extender.MakeZombie(ped, ZombieGroup);
                             }
-                            if(ped.RelationshipGroup != SurvivorGroup && ped.Weapons.Current == WeaponHash.Unarmed)
+                            if (ped.RelationshipGroup == ZombieGroup)
                             {
-                                extender.MakeZombieGoToPed(ped, Game.Player.Character.Position);
+                                if (extender.CanHearPlayer(ped) || extender.CanSeePlayer(ped))
+                                {
+                                    extender.MakeZombieGoToPed(ped, Game.Player.Character.Position);
+                                }
+                                else
+                                {
+                                    ped.Task.WanderAround(World.GetNextPositionOnStreet(ped.Position), 20f); ;
+                                }
+                                if (ped.IsTouching(Game.Player.Character) && !ped.IsGettingUp && !ped.IsFalling && ped.IsWalking)
+                                {
+                                    Game.Player.Character.Health -= 1;
+                                }
+                                if (Friendlies.Count > 0)
+                                {
+                                    for (int i = 0; i < Friendlies.Count; i++)
+                                    {
+                                        if (Friendlies[i] != null)
+                                        {
+                                            if (World.GetDistance(ped.Position,Friendlies[i].Position) < 1f&& !ped.IsGettingUp && !ped.IsFalling && ped.IsWalking)
+                                            {
+                                                if (Friendlies[i].Health < 10)
+                                                {
+                                                    Friendlies[i].RelationshipGroup = ZombieGroup;
+                                                    Friendlies[i].AttachedBlip.Delete();
+                                                    extender.MakeZombie(Friendlies[i], ZombieGroup);
+                                                    Friendlies.RemoveAt(i);
+                                                }
+                                                else
+                                                {
+                                                    Friendlies[i].Health -= 10;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else if (ped.RelationshipGroup == FriendlyGroup)
+                        {
+                            if (ped.IsDead)
+                            {
+                                ped.RelationshipGroup.Remove();
+                                Game.Player.Character.PedGroup.Remove(ped);
+                                ped.AttachedBlip.Delete();
                             }
                         }
                     }
                 }
             }
-            if(Menu.zombie_spawn == 1)
+            if (Menu.zombie_spawn == 1)
             {
                 Menu.zombie_spawn = 0;
                 enable = true;
             }
-            if(Menu.survivor_spawn == 1)
+            if (Menu.survivor_spawn == 1)
             {
                 Menu.survivor_spawn = 0;
-                Ped survivor = World.CreateRandomPed(Game.Player.Character.Position);
-                MakeSurvivor(survivor, SurvivorGroup);
+                Ped friendly = World.CreateRandomPed(Game.Player.Character.Position);
+                extender.MakeFriendly(friendly, FriendlyGroup);
+                Friendlies.Add(friendly);
             }
         }
-        void OnKeyUp(object sender,KeyEventArgs e)
+        void SetRelationShips()
         {
-            if(e.KeyCode == Keys.I)
-            {
-                Notification.Show("0");
-            }
-            if(e.KeyCode == Keys.K)
-            {
-                Notification.Show("5");
-            }
-            if(e.KeyCode == Keys.L)
-            {
-                Notification.Show("1");
-            }
-        }
-        public void MakeSurvivor(Ped ped, RelationshipGroup relationshipGroup)
-        {
-            ped.RelationshipGroup = relationshipGroup;
-            ped.RelationshipGroup = SurvivorGroup;
-            ped.Weapons.Give(WeaponHash.CarbineRifle, 100, true, true);
-            ped.Task.FightAgainstHatedTargets(30f);
-            ped.AlwaysKeepTask = true;
-            Function.Call(Hash.SET_PED_COMBAT_ATTRIBUTES, ped, 46, true);
-            Blip blip = ped.AddBlip();
-            blip.Sprite = BlipSprite.Friend;
-            blip.Color = BlipColor.Blue;
+            ZombieGroup = World.AddRelationshipGroup("ZombieGroup");
+            FriendlyGroup = World.AddRelationshipGroup("FriendlyGroup");
+            PlayerGroup = World.AddRelationshipGroup("PlayerGroup");
+            RunnerGroup = World.AddRelationshipGroup("RunnerGroup");
+            BomberGroup = World.AddRelationshipGroup("BomberGroup");
+            PlayerGroup.SetRelationshipBetweenGroups(ZombieGroup, Relationship.Hate, true);
+            PlayerGroup.SetRelationshipBetweenGroups(FriendlyGroup, Relationship.Companion, true);
+            FriendlyGroup.SetRelationshipBetweenGroups(ZombieGroup, Relationship.Hate, true);
+            RunnerGroup.SetRelationshipBetweenGroups(ZombieGroup, Relationship.Companion, true);
+            FriendlyGroup.SetRelationshipBetweenGroups(RunnerGroup, Relationship.Hate, true);
+            FriendlyGroup.SetRelationshipBetweenGroups(BomberGroup, Relationship.Hate, true);
         }
     }
 }
