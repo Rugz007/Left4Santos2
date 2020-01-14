@@ -94,10 +94,13 @@ namespace Left4Santos2
                     }
                 }
             }
-            if (Menu.zombie_spawn == 1)
+            if (Menu.zombie_spawn == 1 && enable == false)
             {
-                Menu.zombie_spawn = 0;
                 enable = true;
+            }
+            if (Menu.zombie_spawn == 0 && enable == true)
+            {
+                enable = false;
             }
             if (Menu.survivor_spawn == 1)
             {
