@@ -68,7 +68,8 @@ namespace Left4Santos2
                                                 if (Friendlies[i].Health < 10)
                                                 {
                                                     Friendlies[i].RelationshipGroup = ZombieGroup;
-                                                    Friendlies[i].AttachedBlip.Delete();
+                                                    if(Friendlies[i].AttachedBlip != null)
+                                                    { Friendlies[i].AttachedBlip.Delete(); }
                                                     extender.MakeZombie(Friendlies[i], ZombieGroup);
                                                     Friendlies.RemoveAt(i);
                                                 }
