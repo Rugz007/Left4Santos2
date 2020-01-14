@@ -86,6 +86,28 @@ namespace Left4Santos2
         }
         public void MakeZombieGoToPed(Ped ped, Vector3 target)
         {
+            if (!Function.Call<bool>(Hash.HAS_CLIP_SET_LOADED, new InputArgument[]
+                    {"move_m@drunk@verydrunk"}))
+            {
+                Function.Call(Hash.REQUEST_CLIP_SET, new InputArgument[]
+                {
+                        "move_m@drunk@verydrunk"
+                });
+            }
+            if (Function.Call<bool>(Hash.HAS_CLIP_SET_LOADED, new InputArgument[]
+            {
+                    "move_m@drunk@verydrunk"
+            }))
+            {
+                Function.Call(Hash.SET_PED_MOVEMENT_CLIPSET, new InputArgument[]
+                {
+                        ped.Handle,"move_m@drunk@verydrunk",1048576000
+                });
+            }
+            Function.Call(Hash.STOP_PED_SPEAKING, new InputArgument[]
+            {
+                    ped.Handle,true
+            });
             Function.Call(Hash.TASK_GO_STRAIGHT_TO_COORD, ped, target.X, target.Y, target.Z, 1.0f, -1, 0.0f, 0f);
         }
     }

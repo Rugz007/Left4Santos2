@@ -24,6 +24,7 @@ namespace Left4Santos2
             PlayerGroup.SetRelationshipBetweenGroups(ZombieGroup, Relationship.Hate, true);
             PlayerGroup.SetRelationshipBetweenGroups(SurvivorGroup, Relationship.Companion, true);
             Function.Call(Hash.SET_MAX_WANTED_LEVEL, 0);
+            World.Blackout = true;
             extender = new Extender();
             this.KeyUp += OnKeyUp;
             this.Tick += Main_Tick;
@@ -43,7 +44,7 @@ namespace Left4Santos2
 
                         if (ped != Game.Player.Character && ped.RelationshipGroup != PlayerGroup && !ped.IsDead && ped.RelationshipGroup != SurvivorGroup )
                         {
-                           /* #region Make Survivor
+                            #region Make Survivor
                             if (p.Length >= 10)
                             {
                                 rnd = random.Next(1, 5);
@@ -53,17 +54,23 @@ namespace Left4Santos2
                                     {
                                         extender.MakeSurvivor(p[i], SurvivorGroup);
                                     }
-                                    //p = p.Where(val => val != p[i]).ToArray();
                                 }
                             }
-                            #endregion*/
-                            if (ped.RelationshipGroup != ZombieGroup )
+                            #endregion
+                            if (ped.RelationshipGroup != ZombieGroup && ped.RelationshipGroup != SurvivorGroup)
                             { 
                                 extender.MakeZombie(ped, ZombieGroup);
                             }
-                            if(ped.RelationshipGroup != SurvivorGroup && ped.Weapons.Current == WeaponHash.Unarmed)
+                            if(ped.RelationshipGroup == ZombieGroup)
                             {
                                 extender.MakeZombieGoToPed(ped, Game.Player.Character.Position);
+                            }
+                        }
+                        else if(ped.RelationshipGroup == SurvivorGroup)
+                        {
+                            if(ped.IsDead)
+                            {
+                                Game.Player.Character.PedGroup.Remove(ped);
                             }
                         }
                     }
@@ -100,6 +107,9 @@ namespace Left4Santos2
         {
             ped.RelationshipGroup = relationshipGroup;
             ped.RelationshipGroup = SurvivorGroup;
+            ped.RelationshipGroup = PlayerGroup;
+            Function.Call(Hash.SET_PED_AS_GROUP_MEMBER, ped, Game.Player.Character.PedGroup);
+            ped.NeverLeavesGroup = true;
             ped.Weapons.Give(WeaponHash.CarbineRifle, 100, true, true);
             ped.Task.FightAgainstHatedTargets(30f);
             ped.AlwaysKeepTask = true;
