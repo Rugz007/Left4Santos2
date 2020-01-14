@@ -73,9 +73,11 @@ namespace Left4Santos2
             Function.Call(Hash.SET_PED_FLEE_ATTRIBUTES, ped, 0, 0);
             Function.Call(Hash.SET_PED_COMBAT_ATTRIBUTES, ped, 46, 1);
         }
-        public void MakeSurvivor(Ped ped, RelationshipGroup relationshipGroup)
+        public void MakeFriendly(Ped ped, RelationshipGroup relationshipGroup)
         {
             ped.RelationshipGroup = relationshipGroup;
+            ped.Health = 100;
+            Function.Call(Hash.SET_PED_AS_GROUP_MEMBER, ped, Game.Player.Character.PedGroup);
             ped.Weapons.Give(WeaponHash.CarbineRifle, 100, true, true);
             ped.Task.FightAgainstHatedTargets(30f);
             ped.AlwaysKeepTask = true;
